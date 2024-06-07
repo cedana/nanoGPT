@@ -11,6 +11,8 @@ from model import GPTConfig, GPT
 # -----------------------------------------------------------------------------
 batch_size = 12
 block_size = 1024
+n_layer = 12
+n_head = 12
 bias = False
 real_data = True
 seed = 1337
@@ -50,7 +52,7 @@ else:
 # model init
 gptconf = GPTConfig(
     block_size = block_size, # how far back does the model look? i.e. context size
-    n_layer = 12, n_head = 12, n_embd = 768, # size of the model
+    n_layer = n_layer, n_head = n_head, n_embd = 768, # size of the model
     dropout = 0, # for determinism
     bias = bias,
 )
