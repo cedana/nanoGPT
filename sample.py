@@ -100,5 +100,5 @@ with torch.no_grad():
             print('---------------')
 
 if wait_for_cr:
-    with open(cr_log_file, 'w') as f:
+    with open(cr_log_file, 'a') as f:
         print('DONE', file=f)
