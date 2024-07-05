@@ -20,6 +20,8 @@ seed = 1337
 device = 'cuda' # examples: 'cpu', 'cuda', 'cuda:0', 'cuda:1', etc.
 dtype = 'bfloat16' if torch.cuda.is_available() and torch.cuda.is_bf16_supported() else 'float16' # 'float32' or 'bfloat16' or 'float16'
 compile = False # use PyTorch 2.0 to compile the model to be faster
+cr_log_file = 'cr.log'
+wait_for_cr = False
 exec(open('configurator.py').read()) # overrides from command line or config file
 # -----------------------------------------------------------------------------
 
@@ -80,6 +82,15 @@ if start.startswith('FILE:'):
 start_ids = encode(start)
 x = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
 
+if wait_for_cr:
+    with open(cr_log_file, 'w') as f:
+        print('CHECKPOINT', file=f)
+    with open(cr_log_file, 'r') as f:
+        while True:
+            line = f.readline()
+            if 'RESTORED' in line:
+                break
+
 # run generation
 with torch.no_grad():
     with ctx:
@@ -87,3 +98,7 @@ with torch.no_grad():
             y = model.generate(x, max_new_tokens, temperature=temperature, top_k=top_k)
             print(decode(y[0].tolist()))
             print('---------------')
+
+if wait_for_cr:
+    with open(cr_log_file, 'w') as f:
+        print('DONE', file=f)
