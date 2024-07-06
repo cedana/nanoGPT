@@ -92,13 +92,16 @@ if wait_for_cr:
                 break
 
 # run generation
-with torch.no_grad():
-    with ctx:
-        for k in range(num_samples):
-            y = model.generate(x, max_new_tokens, temperature=temperature, top_k=top_k)
-            print(decode(y[0].tolist()))
-            print('---------------')
-
-if wait_for_cr:
-    with open(cr_log_file, 'a') as f:
-        print('DONE', file=f)
+try:
+    with torch.no_grad():
+        with ctx:
+            for k in range(num_samples):
+                y = model.generate(x, max_new_tokens, temperature=temperature, top_k=top_k)
+                print(decode(y[0].tolist()))
+                print('---------------')
+except Exception as e:
+    raise e
+finally:
+    if wait_for_cr:
+        with open(cr_log_file, 'a') as f:
+            print('DONE', file=f)
