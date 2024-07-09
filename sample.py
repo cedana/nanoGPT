@@ -83,8 +83,9 @@ start_ids = encode(start)
 x = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
 
 if wait_for_cr:
-    with open(cr_log_file, 'w+') as cr_log:
+    with open(cr_log_file, 'a') as cr_log:
         print('CHECKPOINT', file=cr_log)
+    with open(cr_log_file, 'r') as cr_log:
         while True:
             line = cr_log.readline()
             if 'RESTORED' in line:
