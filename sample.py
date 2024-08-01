@@ -90,7 +90,7 @@ if wait_for_cr:
     with open(cr_log_file, 'r') as cr_log:
         while True:
             line = cr_log.readline()
-            if 'RESTORED' in line:
+            if 'RESTORE' in line:
                 break
 
 # run generation
