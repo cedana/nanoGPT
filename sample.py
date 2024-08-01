@@ -82,9 +82,9 @@ if start.startswith('FILE:'):
 start_ids = encode(start)
 x = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
 
-print("", flush=True)
 
 if wait_for_cr:
+    print("", flush=True)
     with open(cr_log_file, 'a') as cr_log:
         print('CHECKPOINT', file=cr_log)
     with open(cr_log_file, 'r') as cr_log:
