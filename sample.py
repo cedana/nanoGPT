@@ -86,7 +86,7 @@ x = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
 if wait_for_cr:
     print("", flush=True)
     with open(cr_log_file, 'a') as cr_log:
-        print('CHECKPOINT', file=cr_log)
+        print('CHECKPOINT', file=cr_log, flush=True)
     with open(cr_log_file, 'r') as cr_log:
         while True:
             line = cr_log.readline()
@@ -106,4 +106,4 @@ except Exception as e:
 finally:
     if wait_for_cr:
         with open(cr_log_file, 'a') as cr_log:
-            print('DONE', file=cr_log)
+            print('DONE', file=cr_log, flush=True)
