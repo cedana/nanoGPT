@@ -11,7 +11,7 @@ import shutil
 from model import GPTConfig, GPT
 
 
-PERSIST_CACHE = os.getenv('PERSIST_CACHE', True) == '1'
+PERSIST_CACHE = os.getenv('PERSIST_CACHE', '1') == '1'
 
 # -----------------------------------------------------------------------------
 init_from = 'resume' # either 'resume' (from an out_dir) or a gpt2 variant (e.g. 'gpt2-xl')
@@ -40,8 +40,9 @@ try:
     device_type = 'cuda' if 'cuda' in device else 'cpu' # for later use in torch.autocast
     ptdtype = {'float32': torch.float32, 'bfloat16': torch.bfloat16, 'float16': torch.float16}[dtype]
     ctx = nullcontext() if device_type == 'cpu' else torch.amp.autocast(device_type=device_type, dtype=ptdtype)
-    if not cache_dir:
+    if not PERSIST_CACHE and not cache_dir:
         cache_dir = tempfile.TemporaryDirectory().name
+        os.environ['HF_HOME'] = cache_dir
 
     # model
     if init_from == 'resume':
@@ -118,9 +119,9 @@ try:
 except Exception as e:
     raise e
 finally:
-    if not PERSIST_CACHE:
+    if not PERSIST_CACHE and cache_dir and os.path.exists(cache_dir):
         print('Clearing cache...')
-        shutil.rmtree(cache_dir)
+        shutil.rmtree(cache_dir, ignore_errors=True)
     if wait_for_cr:
         with open(cr_log_file, 'a') as cr_log:
             print('DONE', file=cr_log, flush=True)
