@@ -41,7 +41,7 @@ try:
     ptdtype = {'float32': torch.float32, 'bfloat16': torch.bfloat16, 'float16': torch.float16}[dtype]
     ctx = nullcontext() if device_type == 'cpu' else torch.amp.autocast(device_type=device_type, dtype=ptdtype)
     if not cache_dir:
-        cache_dir = tempfile.TemporaryDirectory.name
+        cache_dir = tempfile.TemporaryDirectory().name
 
     # model
     if init_from == 'resume':
