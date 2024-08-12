@@ -2,6 +2,7 @@
 Sample from a trained model
 """
 import os
+import signal
 import pickle
 import tempfile
 from contextlib import nullcontext
@@ -9,7 +10,6 @@ import torch
 import tiktoken
 import shutil
 from model import GPTConfig, GPT
-
 
 PERSIST_CACHE = os.getenv('PERSIST_CACHE', '1') == '1'
 
@@ -31,6 +31,12 @@ trust_remote_code = False
 cache_dir = None
 exec(open('configurator.py').read()) # overrides from command line or config file
 # -----------------------------------------------------------------------------
+
+def handle_exit(signum, frame):
+    sys.exit(1)
+
+signal.signal(signal.SIGINT, handle_exit)
+signal.signal(signal.SIGTERM, handle_exit)
 
 try:
     torch.manual_seed(seed)
