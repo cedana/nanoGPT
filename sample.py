@@ -59,7 +59,7 @@ try:
         model.load_state_dict(state_dict)
     elif init_from.startswith('gpt2'):
         # init from a given GPT-2 model
-        model = GPT.from_pretrained(init_from, dict(dropout=0.0), cache_dir=cache_dir)
+        model = GPT.from_pretrained(init_from, dict(dropout=0.0))
 
     model.eval()
     model.to(device)
